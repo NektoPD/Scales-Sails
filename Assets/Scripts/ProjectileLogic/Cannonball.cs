@@ -12,6 +12,7 @@ namespace ProjectileLogic
         [SerializeField] private float _lifeTimeAfterLand = 0.1f;
 
         private Transform _transform;
+        private Vector3 _visualBaseScale;
         private Vector2 _origin;
         private Vector2 _target;
         private float _arcHeight;
@@ -26,8 +27,8 @@ namespace ProjectileLogic
         {
             _transform = transform;
 
-            if (_visual == null)
-                _visual = _transform;
+            if (_visual != null)
+                _visualBaseScale = _visual.localScale;
 
             SetupTrailGradient();
         }
@@ -59,11 +60,12 @@ namespace ProjectileLogic
             _progress = Mathf.Clamp01(_progress);
 
             Vector2 groundPosition = Vector2.Lerp(_origin, _target, _progress);
-            _transform.position = groundPosition;
-
             float height = _arcHeight * 4f * _progress * (1f - _progress);
-            _visual.localPosition = new Vector3(0f, height, 0f);
-            _visual.localScale = Vector3.one * (1f + height * _heightScaleFactor);
+
+            _transform.position = new Vector3(groundPosition.x, groundPosition.y + height, _transform.position.z);
+
+            if (_visual != null)
+                _visual.localScale = _visualBaseScale * (1f + height * _heightScaleFactor);
 
             if (_progress >= 1f)
                 Land(groundPosition);
