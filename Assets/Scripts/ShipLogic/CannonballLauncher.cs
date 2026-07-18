@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using ProjectileLogic;
 
 namespace ShipLogic
@@ -15,6 +16,10 @@ namespace ShipLogic
         [SerializeField] private float _minArcHeight = 0.6f;
         [SerializeField] private float _maxArcHeight = 2f;
 
+        [Header("Charge Bar")]
+        [SerializeField] private GameObject _chargeBarRoot;
+        [SerializeField] private Image _chargeBarFill;
+
         private Camera _camera;
         private float _chargeTime;
         private bool _isCharging;
@@ -23,6 +28,7 @@ namespace ShipLogic
         private void Awake()
         {
             _camera = Camera.main;
+            HideChargeBar();
         }
 
         private void Update()
@@ -34,7 +40,10 @@ namespace ShipLogic
                 StartCharge();
 
             if (_isCharging)
+            {
                 _chargeTime = Mathf.Min(_chargeTime + Time.deltaTime, _maxChargeTime);
+                UpdateChargeBar();
+            }
 
             if (Mouse.current.leftButton.wasReleasedThisFrame && _isCharging)
                 Fire();
@@ -47,12 +56,18 @@ namespace ShipLogic
             _canShoot = false;
             _isCharging = false;
             _chargeTime = 0f;
+            HideChargeBar();
         }
 
         private void StartCharge()
         {
             _isCharging = true;
             _chargeTime = 0f;
+
+            if (_chargeBarRoot != null)
+                _chargeBarRoot.SetActive(true);
+
+            UpdateChargeBar();
         }
 
         private void Fire()
@@ -60,7 +75,10 @@ namespace ShipLogic
             _isCharging = false;
 
             if (_cannonballPrefab == null || _firePoint == null || _camera == null)
+            {
+                HideChargeBar();
                 return;
+            }
 
             float chargeNormalized = Mathf.Clamp01(_chargeTime / _maxChargeTime);
 
@@ -76,6 +94,22 @@ namespace ShipLogic
             cannonball.Launch(origin, target, arcHeight, _projectileSpeed);
 
             _chargeTime = 0f;
+            HideChargeBar();
+        }
+
+        private void UpdateChargeBar()
+        {
+            if (_chargeBarFill != null)
+                _chargeBarFill.fillAmount = Mathf.Clamp01(_chargeTime / _maxChargeTime);
+        }
+
+        private void HideChargeBar()
+        {
+            if (_chargeBarFill != null)
+                _chargeBarFill.fillAmount = 0f;
+
+            if (_chargeBarRoot != null)
+                _chargeBarRoot.SetActive(false);
         }
     }
 }
