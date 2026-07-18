@@ -7,24 +7,19 @@ namespace ShipLogic
     public class ShipController : MonoBehaviour
     {
         [SerializeField] private float _moveSpeed = 4f;
-        [SerializeField] private float _rotationSpeed = 180f;
-
-        private readonly int _spriteForwardOffset = -90;
+        [SerializeField] private float _rotationSpeed = 120f;
+        [SerializeField] private float _spriteForwardOffset = -90f;
 
         private Rigidbody2D _rigidbody;
-        private Camera _camera;
         private Transform _transform;
 
-        private Vector2 _moveInput;
-        private Vector2 _aimWorldPosition;
+        private float _throttleInput;
+        private float _turnInput;
         private bool _canControl = true;
-
-        public Vector2 AimWorldPosition => _aimWorldPosition;
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
-            _camera = Camera.main;
             _transform = transform;
         }
 
@@ -33,8 +28,7 @@ namespace ShipLogic
             if (!_canControl)
                 return;
 
-            ReadMoveInput();
-            ReadAimInput();
+            ReadInput();
         }
 
         private void FixedUpdate()
@@ -42,8 +36,8 @@ namespace ShipLogic
             if (!_canControl)
                 return;
 
+            Rotate();
             Move();
-            RotateTowardsAim();
         }
 
         public void SetSpeed(float speed) => _moveSpeed = speed;
@@ -53,54 +47,42 @@ namespace ShipLogic
         public void Disable()
         {
             _canControl = false;
-            _moveInput = Vector2.zero;
+            _throttleInput = 0f;
+            _turnInput = 0f;
             _rigidbody.velocity = Vector2.zero;
         }
 
-        private void ReadMoveInput()
+        private void ReadInput()
         {
-            Vector2 direction = Vector2.zero;
+            _throttleInput = 0f;
+            _turnInput = 0f;
 
             if (Keyboard.current == null)
                 return;
 
             if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed)
-                direction.y += 1f;
+                _throttleInput += 1f;
             if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed)
-                direction.y -= 1f;
+                _throttleInput -= 1f;
             if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
-                direction.x -= 1f;
+                _turnInput += 1f;
             if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
-                direction.x += 1f;
-
-            _moveInput = direction.normalized;
+                _turnInput -= 1f;
         }
 
-        private void ReadAimInput()
+        private void Rotate()
         {
-            if (Mouse.current == null || _camera == null)
-                return;
-
-            Vector2 screenPosition = Mouse.current.position.ReadValue();
-            _aimWorldPosition = _camera.ScreenToWorldPoint(screenPosition);
+            float nextAngle = _rigidbody.rotation + _turnInput * _rotationSpeed * Time.fixedDeltaTime;
+            _rigidbody.MoveRotation(nextAngle);
         }
 
         private void Move()
         {
-            Vector2 nextPosition = _rigidbody.position + _moveSpeed * Time.fixedDeltaTime * _moveInput;
+            float forwardAngle = (_rigidbody.rotation - _spriteForwardOffset) * Mathf.Deg2Rad;
+            Vector2 forward = new Vector2(Mathf.Cos(forwardAngle), Mathf.Sin(forwardAngle));
+
+            Vector2 nextPosition = _rigidbody.position + _throttleInput * _moveSpeed * Time.fixedDeltaTime * forward;
             _rigidbody.MovePosition(nextPosition);
-        }
-
-        private void RotateTowardsAim()
-        {
-            Vector2 aimDirection = _aimWorldPosition - _rigidbody.position;
-
-            if (aimDirection.sqrMagnitude < 0.01f)
-                return;
-
-            float targetAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg + _spriteForwardOffset;
-            float nextAngle = Mathf.MoveTowardsAngle(_rigidbody.rotation, targetAngle, _rotationSpeed * Time.fixedDeltaTime);
-            _rigidbody.MoveRotation(nextAngle);
         }
     }
 }
