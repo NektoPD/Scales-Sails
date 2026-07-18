@@ -49,7 +49,7 @@ namespace ShipLogic
             _canControl = false;
             _throttleInput = 0f;
             _turnInput = 0f;
-            _rigidbody.velocity = Vector2.zero;
+            _rigidbody.linearVelocity = Vector2.zero;
         }
 
         private void ReadInput()
