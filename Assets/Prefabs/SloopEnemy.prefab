@@ -14,7 +14,9 @@ GameObject:
   - component: {fileID: 5678470847295398054}
   - component: {fileID: 2062382484316555689}
   - component: {fileID: 7609077111844811732}
-  m_Layer: 0
+  - component: {fileID: 3142659297326695284}
+  - component: {fileID: -6473089800091878969}
+  m_Layer: 8
   m_Name: SloopEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -184,9 +186,13 @@ MonoBehaviour:
   _maxHealth: 50
   _moveSpeed: 2
   _rotationSpeed: 90
-  _stoppingDistance: 4
+  _stoppingDistance: 10
   _spriteForwardOffset: 90
   _deathDuration: 0.4
+  _spriteRenderer: {fileID: 4644467610325769508}
+  _intactSprite: {fileID: -5145246922917621970, guid: 540ae7617cf85554da0e2da049a37862, type: 3}
+  _damagedSprite: {fileID: 4618631658267575960, guid: 619d1a2a97cb8424aa1e1ed1937f6bbd, type: 3}
+  _damagedThreshold: 0.5
 --- !u!114 &7609077111844811732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,6 +209,40 @@ MonoBehaviour:
   _fillImage: {fileID: 414946295073493346}
   _root: {fileID: 5806563446262505252}
   _hideWhenFull: 1
+--- !u!114 &3142659297326695284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485521545806345712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30164daa643c77947a4bef52f1f1e664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyLogic.EnemyCannon
+  _pool: {fileID: -6473089800091878969}
+  _firePoint: {fileID: 5030845980327516700}
+  _fireCooldown: 2
+  _projectileSpeed: 8
+  _arcHeight: 1.5
+  _damageMask:
+    serializedVersion: 2
+    m_Bits: 192
+--- !u!114 &-6473089800091878969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485521545806345712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a149e7a304fdc1a43b4c5dede077d76f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileLogic.CannonballPool
+  _prefab: {fileID: 5423775892430831456, guid: 406c37b8e20d4b34e8dbae78fb32d7c0, type: 3}
+  _initialSize: 30
 --- !u!1001 &744026113131111541
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -211,9 +251,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5030845980327516700}
     m_Modifications:
+    - target: {fileID: 4890185787661188446, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6540987519515097937, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Name
       value: EnemyCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540987519515097937, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7540401506312529447, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Pivot.x

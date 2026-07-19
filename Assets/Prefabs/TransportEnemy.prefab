@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7770365496709197539}
   - component: {fileID: 4210776448923865582}
   - component: {fileID: 2788616687713427609}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TransportEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,6 +203,10 @@ MonoBehaviour:
   _stoppingDistance: 4
   _spriteForwardOffset: -90
   _deathDuration: 0.4
+  _spriteRenderer: {fileID: 450111133187497069}
+  _intactSprite: {fileID: -5972772318326981822, guid: 547679cde29807a408ee07a5193d362f, type: 3}
+  _damagedSprite: {fileID: 4098835183948305094, guid: e8961a45acd9b1546bef2cfbabf88221, type: 3}
+  _damagedThreshold: 0.5
   _reinforcementPrefab: {fileID: 2062382484316555689, guid: 5f4f5f798942c93418b9b362e91bcded, type: 3}
   _reinforcementCount: 3
   _spawnRadius: 1.5
@@ -214,9 +218,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5805047281024521337}
     m_Modifications:
+    - target: {fileID: 4890185787661188446, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6540987519515097937, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Name
       value: EnemyCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540987519515097937, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7540401506312529447, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Pivot.x

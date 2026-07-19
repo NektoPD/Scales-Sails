@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6604157022236502991}
   - component: {fileID: 5644658209745449752}
   - component: {fileID: 4645536944642119791}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BattleshipEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,9 +233,13 @@ MonoBehaviour:
   _maxHealth: 50
   _moveSpeed: 2
   _rotationSpeed: 90
-  _stoppingDistance: 4
+  _stoppingDistance: 7
   _spriteForwardOffset: -90
   _deathDuration: 0.4
+  _spriteRenderer: {fileID: 5502679554720921278}
+  _intactSprite: {fileID: -253209141900692233, guid: 16e4c77423c98334fbf3f0ce21fd785b, type: 3}
+  _damagedSprite: {fileID: -8170054070116237936, guid: 35b9579802403b84abaaf95d74d5dcb3, type: 3}
+  _damagedThreshold: 0.5
 --- !u!1001 &6249060383882221809
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -244,9 +248,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7276857668372673244}
     m_Modifications:
+    - target: {fileID: 4890185787661188446, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6540987519515097937, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Name
       value: EnemyCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540987519515097937, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7540401506312529447, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Pivot.x

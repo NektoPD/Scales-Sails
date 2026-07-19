@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2703317099047404512}
   - component: {fileID: 8556826600705922148}
   - component: {fileID: 1609274055145976275}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GunboardEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,6 +204,9 @@ MonoBehaviour:
   _fireCooldown: 2
   _projectileSpeed: 8
   _arcHeight: 1.5
+  _damageMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &8556826600705922148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,9 +222,13 @@ MonoBehaviour:
   _maxHealth: 50
   _moveSpeed: 2
   _rotationSpeed: 90
-  _stoppingDistance: 4
-  _spriteForwardOffset: -90
+  _stoppingDistance: 10
+  _spriteForwardOffset: 90
   _deathDuration: 0.4
+  _spriteRenderer: {fileID: 1093053981680702092}
+  _intactSprite: {fileID: -253209141900692233, guid: 16e4c77423c98334fbf3f0ce21fd785b, type: 3}
+  _damagedSprite: {fileID: 7116970449920188440, guid: 68aa8f44fdcf34b4eb0a9524cf5fae6c, type: 3}
+  _damagedThreshold: 0.5
 --- !u!114 &1609274055145976275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,9 +251,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8873009026933463113}
     m_Modifications:
+    - target: {fileID: 4890185787661188446, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6540987519515097937, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Name
       value: EnemyCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540987519515097937, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7540401506312529447, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Pivot.x
