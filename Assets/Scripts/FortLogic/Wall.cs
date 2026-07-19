@@ -47,7 +47,6 @@ namespace FortLogic
                 _renderer.sprite = _intactSprite;
 
             _renderer.enabled = true;
-            _transform.localScale = Vector3.one;
         }
 
         public void TakeDamage(float damage)
@@ -77,7 +76,6 @@ namespace FortLogic
         private void PlayHitFeedback()
         {
             _transform.DOKill();
-            _transform.localScale = Vector3.one;
             _transform.DOShakePosition(0.2f, _hitShakeStrength, 12, 90f, false, false);
         }
 
@@ -88,7 +86,7 @@ namespace FortLogic
 
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_transform.DOShakeRotation(_breakDuration, 25f));
-            sequence.Join(_transform.DOScale(Vector3.zero, _breakDuration).SetEase(Ease.InBack));
+            sequence.Join(_renderer.DOFade(0f, _breakDuration).SetEase(Ease.InQuad));
             sequence.OnComplete(() =>
             {
                 _renderer.enabled = false;
