@@ -10,6 +10,7 @@ namespace EnemyLogic
         [SerializeField] private float _fireCooldown = 2f;
         [SerializeField] private float _projectileSpeed = 8f;
         [SerializeField] private float _arcHeight = 1.5f;
+        [SerializeField] private LayerMask _damageMask = ~0;
 
         private float _timer;
 
@@ -30,7 +31,7 @@ namespace EnemyLogic
                 return;
 
             Cannonball ball = _pool.Get();
-            ball.Launch(_firePoint.position, targetPosition, _arcHeight, _projectileSpeed);
+            ball.Launch(_firePoint.position, targetPosition, _arcHeight, _projectileSpeed, _damageMask);
         }
     }
 }

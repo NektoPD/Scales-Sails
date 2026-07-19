@@ -15,6 +15,7 @@ namespace ShipLogic
         [SerializeField] private float _projectileSpeed = 10f;
         [SerializeField] private float _minArcHeight = 0.6f;
         [SerializeField] private float _maxArcHeight = 2f;
+        [SerializeField] private LayerMask _damageMask = ~0;
 
         private Camera _camera;
         private float _chargeTime;
@@ -85,7 +86,7 @@ namespace ShipLogic
             GetShotData(out Vector2 origin, out Vector2 target, out float arcHeight);
 
             Cannonball cannonball = _pool.Get();
-            cannonball.Launch(origin, target, arcHeight, _projectileSpeed);
+            cannonball.Launch(origin, target, arcHeight, _projectileSpeed, _damageMask);
 
             _chargeTime = 0f;
         }

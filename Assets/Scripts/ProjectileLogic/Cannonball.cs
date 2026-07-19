@@ -41,10 +41,11 @@ namespace ProjectileLogic
 
         public void Initialize(CannonballPool pool) => _pool = pool;
 
-        public void Launch(Vector2 origin, Vector2 target, float arcHeight, float speed)
+        public void Launch(Vector2 origin, Vector2 target, float arcHeight, float speed, LayerMask damageMask)
         {
             _transform.DOKill();
 
+            _damageMask = damageMask;
             _origin = origin;
             _target = target;
             _arcHeight = arcHeight;
