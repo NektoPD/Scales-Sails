@@ -46182,6 +46182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShipLogic.ShipController
   _moveSpeed: 4
   _rotationSpeed: 180
+  _spriteForwardOffset: 90
 --- !u!50 &1548159214
 Rigidbody2D:
   serializedVersion: 5
