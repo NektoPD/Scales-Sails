@@ -15,8 +15,12 @@ namespace ShipLogic
 
         private void Awake()
         {
-            if (_visual == null)
-                _visual = transform;
+            if (_visual == null || _visual == transform)
+            {
+                Debug.LogWarning($"{nameof(WaterBobbing)} on '{name}' needs a child visual Transform (not the root). Disabling.", this);
+                enabled = false;
+                return;
+            }
 
             _basePosition = _visual.localPosition;
             _phaseOffset = Random.Range(0f, Mathf.PI * 2f);
