@@ -114,6 +114,18 @@ namespace ProjectileLogic
             }
         }
 
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (!_isFlying)
+                return;
+
+            if ((_damageMask.value & (1 << other.gameObject.layer)) == 0)
+                return;
+
+            if (other.TryGetComponent(out IDamageable _))
+                Land(_transform.position);
+        }
+
         private void Despawn()
         {
             _isLanding = false;
