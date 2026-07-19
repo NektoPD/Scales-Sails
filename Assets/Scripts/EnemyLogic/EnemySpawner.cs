@@ -24,8 +24,18 @@ namespace EnemyLogic
         [SerializeField] private Transform _fort;
         [SerializeField] private Transform _player;
         [SerializeField] private Transform[] _spawnPoints;
+
+        [Header("Enemy prefabs")]
+        [SerializeField] private EnemyShip _sloop;
+        [SerializeField] private EnemyShip _gunboat;
+        [SerializeField] private EnemyShip _battleship;
+        [SerializeField] private EnemyShip _kamikaze;
+        [SerializeField] private EnemyShip _transport;
+
+        [Header("Flow")]
         [SerializeField] private Wave[] _waves;
-        [SerializeField] private float _timeBetweenWaves = 5f;
+        [SerializeField] private float _timeBetweenWaves = 6f;
+        [SerializeField] private bool _autoGenerateWaves = true;
 
         private readonly List<EnemyShip> _alive = new List<EnemyShip>();
         private int _waveIndex;
@@ -34,6 +44,9 @@ namespace EnemyLogic
 
         private void Start()
         {
+            if (_autoGenerateWaves || _waves == null || _waves.Length == 0)
+                _waves = BuildWaves();
+
             StartCoroutine(RunWaves());
         }
 
@@ -41,6 +54,46 @@ namespace EnemyLogic
         {
             StopAllCoroutines();
         }
+
+        private Wave[] BuildWaves()
+        {
+            List<Wave> waves = new List<Wave>
+            {
+                // 1 - onboarding: only fast weak sloops. Learn to aim.
+                MakeWave(1.1f, E(_sloop, 3)),
+                // 2 - introduce ranged pressure.
+                MakeWave(1.0f, E(_sloop, 3), E(_gunboat, 2)),
+                // 3 - first threat to the fort.
+                MakeWave(0.9f, E(_sloop, 2), E(_gunboat, 2), E(_kamikaze, 2)),
+                // 4 - tanky target + reinforcements from a transport.
+                MakeWave(0.9f, E(_gunboat, 3), E(_battleship, 1), E(_transport, 1)),
+                // 5 - mixed swarm, rising count.
+                MakeWave(0.8f, E(_sloop, 4), E(_gunboat, 3), E(_kamikaze, 3)),
+                // 6 - two battleships anchor the line.
+                MakeWave(0.8f, E(_gunboat, 4), E(_battleship, 2), E(_kamikaze, 3)),
+                // 7 - transports flood the field.
+                MakeWave(0.7f, E(_sloop, 4), E(_transport, 2), E(_gunboat, 4), E(_kamikaze, 4)),
+                // 8 - boss wave: everything at once.
+                MakeWave(0.6f, E(_battleship, 3), E(_gunboat, 5), E(_kamikaze, 5), E(_transport, 2), E(_sloop, 5)),
+            };
+
+            return waves.ToArray();
+        }
+
+        private Wave MakeWave(float interval, params WaveEntry[] entries)
+        {
+            List<WaveEntry> valid = new List<WaveEntry>();
+
+            foreach (WaveEntry entry in entries)
+            {
+                if (entry.Prefab != null && entry.Count > 0)
+                    valid.Add(entry);
+            }
+
+            return new Wave { Entries = valid, SpawnInterval = interval };
+        }
+
+        private WaveEntry E(EnemyShip prefab, int count) => new WaveEntry { Prefab = prefab, Count = count };
 
         private IEnumerator RunWaves()
         {

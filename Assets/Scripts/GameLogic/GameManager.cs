@@ -10,6 +10,7 @@ namespace GameLogic
         [SerializeField] private Fort _fort;
         [SerializeField] private ShipController _playerShip;
         [SerializeField] private CannonballLauncher _playerLauncher;
+        [SerializeField] private PlayerHealth _playerHealth;
         [SerializeField] private EnemySpawner _spawner;
         [SerializeField] private GameObject _gameOverScreen;
 
@@ -18,16 +19,22 @@ namespace GameLogic
         private void OnEnable()
         {
             if (_fort != null)
-                _fort.Destroyed += OnFortDestroyed;
+                _fort.Destroyed += OnGameLost;
+
+            if (_playerHealth != null)
+                _playerHealth.Died += OnGameLost;
         }
 
         private void OnDisable()
         {
             if (_fort != null)
-                _fort.Destroyed -= OnFortDestroyed;
+                _fort.Destroyed -= OnGameLost;
+
+            if (_playerHealth != null)
+                _playerHealth.Died -= OnGameLost;
         }
 
-        private void OnFortDestroyed()
+        private void OnGameLost()
         {
             if (_isGameOver)
                 return;

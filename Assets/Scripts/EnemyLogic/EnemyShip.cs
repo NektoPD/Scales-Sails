@@ -15,6 +15,11 @@ namespace EnemyLogic
         [SerializeField] protected float _spriteForwardOffset = -90f;
         [SerializeField] protected float _deathDuration = 0.4f;
 
+        [SerializeField] protected SpriteRenderer _spriteRenderer;
+        [SerializeField] protected Sprite _intactSprite;
+        [SerializeField] protected Sprite _damagedSprite;
+        [SerializeField] protected float _damagedThreshold = 0.5f;
+
         protected Rigidbody2D _rigidbody;
         protected Transform _transform;
         protected Transform _target;
@@ -33,6 +38,9 @@ namespace EnemyLogic
             _rigidbody = GetComponent<Rigidbody2D>();
             _rigidbody.gravityScale = 0f;
             _transform = transform;
+
+            if (_spriteRenderer == null)
+                _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
         public virtual void Initialize(Transform fort, Transform player)
@@ -42,6 +50,7 @@ namespace EnemyLogic
             _currentHealth = _maxHealth;
             _isDead = false;
             _inRange = false;
+            UpdateSprite();
             HealthChanged?.Invoke(_currentHealth, _maxHealth);
         }
 
@@ -87,9 +96,19 @@ namespace EnemyLogic
 
             _currentHealth -= damage;
             HealthChanged?.Invoke(Mathf.Max(_currentHealth, 0f), _maxHealth);
+            UpdateSprite();
 
             if (_currentHealth <= 0f)
                 Die();
+        }
+
+        protected void UpdateSprite()
+        {
+            if (_spriteRenderer == null || _damagedSprite == null)
+                return;
+
+            bool isDamaged = _currentHealth <= _maxHealth * _damagedThreshold;
+            _spriteRenderer.sprite = isDamaged ? _damagedSprite : _intactSprite;
         }
 
         protected void Kill()
