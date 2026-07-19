@@ -11,7 +11,6 @@ namespace ProjectileLogic
         [SerializeField] private float _heightScaleFactor = 0.4f;
         [SerializeField] private float _lifeTimeAfterLand = 0.1f;
         [SerializeField] private float _damage = 25f;
-        [SerializeField] private float _impactRadius = 0.5f;
         [SerializeField] private LayerMask _damageMask = ~0;
 
         private Transform _transform;
@@ -90,20 +89,8 @@ namespace ProjectileLogic
             if (_visual != null)
                 _visual.localScale = _visualBaseScale * (1f + height * _heightScaleFactor);
 
-            if (TryHit(groundPosition))
-            {
-                Land(groundPosition);
-                return;
-            }
-
             if (_progress >= 1f)
                 Land(groundPosition);
-        }
-
-        private bool TryHit(Vector2 position)
-        {
-            Collider2D hit = Physics2D.OverlapCircle(position, _impactRadius, _damageMask);
-            return hit != null && hit.TryGetComponent(out IDamageable _);
         }
 
         private void Land(Vector2 position)
@@ -111,19 +98,7 @@ namespace ProjectileLogic
             _isFlying = false;
             _isLanding = true;
             _landTimer = 0f;
-            DealDamage(position);
             Landed?.Invoke(position);
-        }
-
-        private void DealDamage(Vector2 position)
-        {
-            Collider2D[] hits = Physics2D.OverlapCircleAll(position, _impactRadius, _damageMask);
-
-            for (int i = 0; i < hits.Length; i++)
-            {
-                if (hits[i].TryGetComponent(out IDamageable damageable))
-                    damageable.TakeDamage(_damage);
-            }
         }
 
         private void Despawn()
@@ -141,8 +116,14 @@ namespace ProjectileLogic
             if (!_isFlying)
                 return;
 
-            if (other.TryGetComponent(out Cannonball otherBall) && otherBall._isFlying)
+            if ((_damageMask.value & (1 << other.gameObject.layer)) == 0)
+                return;
+
+            if (other.TryGetComponent(out IDamageable damageable))
+            {
+                damageable.TakeDamage(_damage);
                 Land(_transform.position);
+            }
         }
 
         public void TakeDamage(float damage)
