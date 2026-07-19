@@ -1,11 +1,12 @@
 using System;
 using DG.Tweening;
+using ProjectileLogic;
 using UnityEngine;
 
 namespace FortLogic
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public class Wall : MonoBehaviour
+    public class Wall : MonoBehaviour, IDamageable
     {
         [SerializeField] private float _maxHealth = 100f;
         [SerializeField] private Sprite _intactSprite;
