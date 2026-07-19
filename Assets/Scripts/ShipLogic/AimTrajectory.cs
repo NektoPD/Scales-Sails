@@ -8,6 +8,7 @@ namespace ShipLogic
         [SerializeField] private Transform _marker;
         [SerializeField] private Color _color = new Color(1f, 0.5f, 0f, 1f);
         [SerializeField] private float _travelDuration = 0.4f;
+        [SerializeField] private float _maxLength = 4f;
 
         private Vector2 _origin;
         private Vector2 _target;
@@ -24,7 +25,7 @@ namespace ShipLogic
         public void Show(Vector2 origin, Vector2 target, float arcHeight)
         {
             _origin = origin;
-            _target = target;
+            _target = ClampToMaxLength(origin, target);
             _arcHeight = arcHeight;
 
             if (_isShowing)
@@ -68,6 +69,16 @@ namespace ShipLogic
             Vector2 groundPosition = Vector2.Lerp(_origin, _target, progress);
             float height = _arcHeight * 4f * progress * (1f - progress);
             _marker.position = new Vector3(groundPosition.x, groundPosition.y + height, _marker.position.z);
+        }
+
+        private Vector2 ClampToMaxLength(Vector2 origin, Vector2 target)
+        {
+            Vector2 direction = target - origin;
+
+            if (direction.magnitude > _maxLength)
+                return origin + direction.normalized * _maxLength;
+
+            return target;
         }
 
         private void SetupTrail()
