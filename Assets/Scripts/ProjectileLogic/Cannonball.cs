@@ -90,8 +90,20 @@ namespace ProjectileLogic
             if (_visual != null)
                 _visual.localScale = _visualBaseScale * (1f + height * _heightScaleFactor);
 
+            if (TryHit(groundPosition))
+            {
+                Land(groundPosition);
+                return;
+            }
+
             if (_progress >= 1f)
                 Land(groundPosition);
+        }
+
+        private bool TryHit(Vector2 position)
+        {
+            Collider2D hit = Physics2D.OverlapCircle(position, _impactRadius, _damageMask);
+            return hit != null && hit.TryGetComponent(out IDamageable _);
         }
 
         private void Land(Vector2 position)
@@ -112,18 +124,6 @@ namespace ProjectileLogic
                 if (hits[i].TryGetComponent(out IDamageable damageable))
                     damageable.TakeDamage(_damage);
             }
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (!_isFlying)
-                return;
-
-            if ((_damageMask.value & (1 << other.gameObject.layer)) == 0)
-                return;
-
-            if (other.TryGetComponent(out IDamageable _))
-                Land(_transform.position);
         }
 
         private void Despawn()
