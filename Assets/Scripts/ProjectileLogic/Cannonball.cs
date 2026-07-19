@@ -25,7 +25,6 @@ namespace ProjectileLogic
         private float _distance;
         private float _progress;
         private bool _isFlying;
-        private bool _isLanding;
 
         public event Action<Vector2> Landed;
 
@@ -53,7 +52,6 @@ namespace ProjectileLogic
             _distance = Vector2.Distance(origin, target);
             _progress = 0f;
             _isFlying = true;
-            _isLanding = false;
 
             _transform.position = origin;
 
@@ -94,7 +92,6 @@ namespace ProjectileLogic
                 return;
 
             _isFlying = false;
-            _isLanding = true;
             Landed?.Invoke(position);
             PlayDespawnAnimation();
         }
@@ -114,7 +111,6 @@ namespace ProjectileLogic
 
         private void Despawn()
         {
-            _isLanding = false;
             _transform.DOKill();
             SetRendererAlpha(1f);
 
