@@ -24,6 +24,7 @@ namespace EnemyLogic
         [SerializeField] private Transform _fort;
         [SerializeField] private Transform _player;
         [SerializeField] private Transform[] _spawnPoints;
+        [SerializeField] private ShipLogic.PlayerMana _playerMana;
 
         [Header("Enemy prefabs")]
         [SerializeField] private EnemyShip _sloop;
@@ -139,6 +140,9 @@ namespace EnemyLogic
         {
             enemy.Died -= OnEnemyDied;
             _alive.Remove(enemy);
+
+            if (_playerMana != null)
+                _playerMana.AddKillReward();
         }
     }
 }

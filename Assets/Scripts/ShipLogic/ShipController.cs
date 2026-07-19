@@ -10,6 +10,9 @@ namespace ShipLogic
         [SerializeField] private float _rotationSpeed = 120f;
         [SerializeField] private float _spriteForwardOffset = -90f;
 
+        private float _speedMultiplier = 1f;
+        private float _rotationMultiplier = 1f;
+
         private Rigidbody2D _rigidbody;
         private Transform _transform;
 
@@ -43,6 +46,12 @@ namespace ShipLogic
 
         public void SetSpeed(float speed) => _moveSpeed = speed;
 
+        public void SetMovementMultipliers(float speedMultiplier, float rotationMultiplier)
+        {
+            _speedMultiplier = speedMultiplier;
+            _rotationMultiplier = rotationMultiplier;
+        }
+
         public void Enable() => _canControl = true;
 
         public void Disable()
@@ -73,7 +82,7 @@ namespace ShipLogic
 
         private void Rotate()
         {
-            float nextAngle = _rigidbody.rotation + _turnInput * _rotationSpeed * Time.fixedDeltaTime;
+            float nextAngle = _rigidbody.rotation + _turnInput * _rotationSpeed * _rotationMultiplier * Time.fixedDeltaTime;
             _rigidbody.MoveRotation(nextAngle);
         }
 
@@ -82,7 +91,7 @@ namespace ShipLogic
             float forwardAngle = (_rigidbody.rotation - _spriteForwardOffset) * Mathf.Deg2Rad;
             Vector2 forward = new Vector2(Mathf.Cos(forwardAngle), Mathf.Sin(forwardAngle));
 
-            Vector2 nextPosition = _rigidbody.position + _throttleInput * _moveSpeed * Time.fixedDeltaTime * forward;
+            Vector2 nextPosition = _rigidbody.position + _throttleInput * _moveSpeed * _speedMultiplier * Time.fixedDeltaTime * forward;
             _rigidbody.MovePosition(nextPosition);
         }
     }

@@ -16,6 +16,11 @@ namespace ShipLogic
         [SerializeField] private float _minArcHeight = 0.6f;
         [SerializeField] private float _maxArcHeight = 2f;
         [SerializeField] private LayerMask _damageMask = ~0;
+        [SerializeField] private float _baseDamage = 25f;
+
+        private float _damageMultiplier = 1f;
+        private float _ballScaleMultiplier = 1f;
+        private int _pierceCount;
 
         private Camera _camera;
         private float _chargeTime;
@@ -46,6 +51,13 @@ namespace ShipLogic
         }
 
         public void Enable() => _canShoot = true;
+
+        public void SetModifiers(float damageMultiplier, float ballScaleMultiplier, int pierceCount)
+        {
+            _damageMultiplier = damageMultiplier;
+            _ballScaleMultiplier = ballScaleMultiplier;
+            _pierceCount = pierceCount;
+        }
 
         public void Disable()
         {
@@ -86,7 +98,7 @@ namespace ShipLogic
             GetShotData(out Vector2 origin, out Vector2 target, out float arcHeight);
 
             Cannonball cannonball = _pool.Get();
-            cannonball.Launch(origin, target, arcHeight, _projectileSpeed, _damageMask);
+            cannonball.Launch(origin, target, arcHeight, _projectileSpeed, _damageMask, _baseDamage * _damageMultiplier, _ballScaleMultiplier, _pierceCount);
 
             _chargeTime = 0f;
         }

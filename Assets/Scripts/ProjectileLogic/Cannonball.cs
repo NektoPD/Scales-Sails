@@ -11,20 +11,23 @@ namespace ProjectileLogic
         [SerializeField] private TrailRenderer _trail;
         [SerializeField] private float _heightScaleFactor = 0.4f;
         [SerializeField] private float _despawnDuration = 0.25f;
-        [SerializeField] private float _damage = 25f;
         [SerializeField] private LayerMask _damageMask = ~0;
 
         private SpriteRenderer _renderer;
         private Transform _transform;
         private CannonballPool _pool;
         private Vector3 _visualBaseScale;
+        private Vector3 _rootBaseScale;
         private Vector2 _origin;
         private Vector2 _target;
         private float _arcHeight;
         private float _speed;
         private float _distance;
         private float _progress;
+        private float _damage = 25f;
+        private int _pierceRemaining;
         private bool _isFlying;
+        private readonly System.Collections.Generic.HashSet<IDamageable> _hitTargets = new System.Collections.Generic.HashSet<IDamageable>();
 
         public event Action<Vector2> Landed;
 
@@ -32,6 +35,7 @@ namespace ProjectileLogic
         {
             _renderer = GetComponent<SpriteRenderer>();
             _transform = transform;
+            _rootBaseScale = _transform.localScale;
 
             if (_visual != null)
                 _visualBaseScale = _visual.localScale;
@@ -41,11 +45,14 @@ namespace ProjectileLogic
 
         public void Initialize(CannonballPool pool) => _pool = pool;
 
-        public void Launch(Vector2 origin, Vector2 target, float arcHeight, float speed, LayerMask damageMask)
+        public void Launch(Vector2 origin, Vector2 target, float arcHeight, float speed, LayerMask damageMask, float damage, float scaleMultiplier, int pierceCount)
         {
             _transform.DOKill();
 
             _damageMask = damageMask;
+            _damage = damage;
+            _pierceRemaining = Mathf.Max(0, pierceCount);
+            _hitTargets.Clear();
             _origin = origin;
             _target = target;
             _arcHeight = arcHeight;
@@ -55,6 +62,7 @@ namespace ProjectileLogic
             _isFlying = true;
 
             _transform.position = origin;
+            _transform.localScale = _rootBaseScale * scaleMultiplier;
 
             if (_visual != null)
                 _visual.localScale = _visualBaseScale;
@@ -114,6 +122,7 @@ namespace ProjectileLogic
         {
             _transform.DOKill();
             SetRendererAlpha(1f);
+            _transform.localScale = _rootBaseScale;
 
             if (_visual != null)
                 _visual.localScale = _visualBaseScale;
@@ -141,8 +150,15 @@ namespace ProjectileLogic
 
             if (other.TryGetComponent(out IDamageable damageable))
             {
+                if (!_hitTargets.Add(damageable))
+                    return;
+
                 damageable.TakeDamage(_damage);
-                Land(_transform.position);
+
+                if (_pierceRemaining > 0)
+                    _pierceRemaining--;
+                else
+                    Land(_transform.position);
             }
         }
 

@@ -16,12 +16,13 @@ namespace ShipLogic
 
         private Transform _transform;
         private float _currentHealth;
+        private float _healthMultiplier = 1f;
         private bool _isDead;
 
         public event Action<float, float> HealthChanged;
         public event Action Died;
 
-        public float MaxHealth => _maxHealth;
+        public float MaxHealth => _maxHealth * _healthMultiplier;
         public float CurrentHealth => _currentHealth;
         public bool IsDead => _isDead;
 
@@ -35,9 +36,18 @@ namespace ShipLogic
 
         private void Start()
         {
-            _currentHealth = _maxHealth;
+            _currentHealth = MaxHealth;
             UpdateSprite();
-            HealthChanged?.Invoke(_currentHealth, _maxHealth);
+            HealthChanged?.Invoke(_currentHealth, MaxHealth);
+        }
+
+        public void SetMaxHealthMultiplier(float multiplier)
+        {
+            float ratio = MaxHealth > 0f ? _currentHealth / MaxHealth : 1f;
+            _healthMultiplier = multiplier;
+            _currentHealth = MaxHealth * ratio;
+            HealthChanged?.Invoke(_currentHealth, MaxHealth);
+            UpdateSprite();
         }
 
         public void TakeDamage(float damage)
@@ -45,8 +55,8 @@ namespace ShipLogic
             if (_isDead || damage <= 0f)
                 return;
 
-            _currentHealth = Mathf.Clamp(_currentHealth - damage, 0f, _maxHealth);
-            HealthChanged?.Invoke(_currentHealth, _maxHealth);
+            _currentHealth = Mathf.Clamp(_currentHealth - damage, 0f, MaxHealth);
+            HealthChanged?.Invoke(_currentHealth, MaxHealth);
             UpdateSprite();
 
             if (_currentHealth <= 0f)
@@ -58,7 +68,7 @@ namespace ShipLogic
             if (_spriteRenderer == null || _damagedSprite == null)
                 return;
 
-            bool isDamaged = _currentHealth <= _maxHealth * _damagedThreshold;
+            bool isDamaged = _currentHealth <= MaxHealth * _damagedThreshold;
             _spriteRenderer.sprite = isDamaged ? _damagedSprite : _intactSprite;
         }
 

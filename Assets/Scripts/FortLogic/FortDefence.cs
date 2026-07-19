@@ -20,6 +20,7 @@ namespace FortLogic
         [SerializeField] private float _spriteForwardOffset = -90f;
         [SerializeField] private LayerMask _enemyMask = ~0;
         [SerializeField] private LayerMask _damageMask = ~0;
+        [SerializeField] private float _damage = 20f;
         [SerializeField] private float _deathDuration = 0.5f;
 
         public static readonly List<FortDefence> Active = new List<FortDefence>();
@@ -113,7 +114,7 @@ namespace FortLogic
             _timer = _fireCooldown;
 
             Cannonball ball = _pool.Get();
-            ball.Launch(_firePoint.position, targetPosition, _arcHeight, _projectileSpeed, _damageMask);
+            ball.Launch(_firePoint.position, targetPosition, _arcHeight, _projectileSpeed, _damageMask, _damage, 1f, 0);
         }
 
         public void TakeDamage(float damage)
