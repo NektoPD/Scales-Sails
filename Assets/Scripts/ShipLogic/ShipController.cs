@@ -20,6 +20,7 @@ namespace ShipLogic
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
+            _rigidbody.gravityScale = 0f;
             _transform = transform;
         }
 
