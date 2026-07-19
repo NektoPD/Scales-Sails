@@ -19,7 +19,7 @@ namespace EnemyLogic
                 return;
 
             if (_inRange)
-                _cannon.TryFire(_player.position);
+                _cannon.TryFire(GetFireTarget().position);
         }
     }
 }

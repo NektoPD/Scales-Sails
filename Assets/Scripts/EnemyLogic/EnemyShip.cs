@@ -20,6 +20,8 @@ namespace EnemyLogic
         [SerializeField] protected Sprite _damagedSprite;
         [SerializeField] protected float _damagedThreshold = 0.5f;
 
+        [SerializeField] protected float _turretPriorityRadius = 6f;
+
         protected Rigidbody2D _rigidbody;
         protected Transform _transform;
         protected Transform _target;
@@ -100,6 +102,31 @@ namespace EnemyLogic
 
             if (_currentHealth <= 0f)
                 Die();
+        }
+
+        protected Transform GetFireTarget()
+        {
+            FortLogic.FortDefence nearestTurret = null;
+            float bestDistance = _turretPriorityRadius;
+
+            foreach (FortLogic.FortDefence turret in FortLogic.FortDefence.Active)
+            {
+                if (turret == null || turret.IsDead)
+                    continue;
+
+                float distance = Vector2.Distance(_rigidbody.position, turret.transform.position);
+
+                if (distance <= bestDistance)
+                {
+                    bestDistance = distance;
+                    nearestTurret = turret;
+                }
+            }
+
+            if (nearestTurret != null)
+                return nearestTurret.transform;
+
+            return _player;
         }
 
         protected void UpdateSprite()
