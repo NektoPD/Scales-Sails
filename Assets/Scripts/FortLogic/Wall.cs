@@ -17,6 +17,8 @@ namespace FortLogic
 
         private SpriteRenderer _renderer;
         private Transform _transform;
+        private Vector3 _basePosition;
+        private Quaternion _baseRotation;
         private float _currentHealth;
         private bool _isBroken;
 
@@ -31,6 +33,8 @@ namespace FortLogic
         {
             _renderer = GetComponent<SpriteRenderer>();
             _transform = transform;
+            _basePosition = _transform.localPosition;
+            _baseRotation = _transform.localRotation;
         }
 
         private void Start()
@@ -76,7 +80,10 @@ namespace FortLogic
         private void PlayHitFeedback()
         {
             _transform.DOKill();
-            _transform.DOShakePosition(0.2f, _hitShakeStrength, 12, 90f, false, false);
+            _transform.localPosition = _basePosition;
+            _transform.localRotation = _baseRotation;
+            _transform.DOShakePosition(0.2f, _hitShakeStrength, 12, 90f, false, false)
+                .OnComplete(() => _transform.localPosition = _basePosition);
         }
 
         private void Break()
