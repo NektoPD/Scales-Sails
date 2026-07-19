@@ -1,6 +1,6 @@
 namespace EnemyLogic
 {
-    public class SloopEnemy : EnemyShip
+    public class SloopEnemy : GunboatEnemy
     {
     }
 }
