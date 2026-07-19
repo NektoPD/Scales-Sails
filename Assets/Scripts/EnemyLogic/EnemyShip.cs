@@ -24,6 +24,7 @@ namespace EnemyLogic
         protected bool _inRange;
 
         public event Action<EnemyShip> Died;
+        public event Action<float, float> HealthChanged;
 
         public bool IsDead => _isDead;
 
@@ -41,6 +42,7 @@ namespace EnemyLogic
             _currentHealth = _maxHealth;
             _isDead = false;
             _inRange = false;
+            HealthChanged?.Invoke(_currentHealth, _maxHealth);
         }
 
         protected virtual void FixedUpdate()
@@ -84,6 +86,7 @@ namespace EnemyLogic
                 return;
 
             _currentHealth -= damage;
+            HealthChanged?.Invoke(Mathf.Max(_currentHealth, 0f), _maxHealth);
 
             if (_currentHealth <= 0f)
                 Die();
