@@ -12,6 +12,7 @@ namespace ProjectileLogic
         [SerializeField] private float _lifeTimeAfterLand = 0.1f;
 
         private Transform _transform;
+        private CannonballPool _pool;
         private Vector3 _visualBaseScale;
         private Vector2 _origin;
         private Vector2 _target;
@@ -19,7 +20,9 @@ namespace ProjectileLogic
         private float _speed;
         private float _distance;
         private float _progress;
+        private float _landTimer;
         private bool _isFlying;
+        private bool _isLanding;
 
         public event Action<Vector2> Landed;
 
@@ -33,6 +36,8 @@ namespace ProjectileLogic
             SetupTrailGradient();
         }
 
+        public void Initialize(CannonballPool pool) => _pool = pool;
+
         public void Launch(Vector2 origin, Vector2 target, float arcHeight, float speed)
         {
             _origin = origin;
@@ -41,9 +46,14 @@ namespace ProjectileLogic
             _speed = speed;
             _distance = Vector2.Distance(origin, target);
             _progress = 0f;
+            _landTimer = 0f;
             _isFlying = true;
+            _isLanding = false;
 
             _transform.position = origin;
+
+            if (_visual != null)
+                _visual.localScale = _visualBaseScale;
 
             if (_trail != null)
                 _trail.Clear();
@@ -51,6 +61,16 @@ namespace ProjectileLogic
 
         private void Update()
         {
+            if (_isLanding)
+            {
+                _landTimer += Time.deltaTime;
+
+                if (_landTimer >= _lifeTimeAfterLand)
+                    Despawn();
+
+                return;
+            }
+
             if (!_isFlying)
                 return;
 
@@ -74,8 +94,19 @@ namespace ProjectileLogic
         private void Land(Vector2 position)
         {
             _isFlying = false;
+            _isLanding = true;
+            _landTimer = 0f;
             Landed?.Invoke(position);
-            Destroy(gameObject, _lifeTimeAfterLand);
+        }
+
+        private void Despawn()
+        {
+            _isLanding = false;
+
+            if (_pool != null)
+                _pool.Return(this);
+            else
+                gameObject.SetActive(false);
         }
 
         private void SetupTrailGradient()
