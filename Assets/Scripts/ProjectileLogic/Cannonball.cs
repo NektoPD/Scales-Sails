@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace ProjectileLogic
 {
-    [RequireComponent(typeof(SpriteRenderer))]
-    public class Cannonball : MonoBehaviour
+    [RequireComponent(typeof(SpriteRenderer), typeof(Collider2D))]
+    public class Cannonball : MonoBehaviour, IDamageable
     {
         [SerializeField] private Transform _visual;
         [SerializeField] private TrailRenderer _trail;
@@ -134,6 +134,21 @@ namespace ProjectileLogic
                 _pool.Return(this);
             else
                 gameObject.SetActive(false);
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (!_isFlying)
+                return;
+
+            if (other.TryGetComponent(out Cannonball otherBall) && otherBall._isFlying)
+                Land(_transform.position);
+        }
+
+        public void TakeDamage(float damage)
+        {
+            if (_isFlying)
+                Land(_transform.position);
         }
 
         private void SetupTrailGradient()
