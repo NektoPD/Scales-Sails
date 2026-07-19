@@ -6,9 +6,9 @@ namespace ShipLogic
     public class AimTrajectory : MonoBehaviour
     {
         [SerializeField] private Color _color = new Color(1f, 0.5f, 0f, 1f);
-        [SerializeField] private float _maxLength = 4f;
         [SerializeField] private int _pointsCount = 20;
-        [SerializeField] private float _width = 0.1f;
+        [SerializeField] private float _minWidth = 0.05f;
+        [SerializeField] private float _maxWidth = 0.3f;
 
         private LineRenderer _line;
 
@@ -19,12 +19,14 @@ namespace ShipLogic
             Hide();
         }
 
-        public void Show(Vector2 origin, Vector2 target, float arcHeight)
+        public void Show(Vector2 origin, Vector2 target, float arcHeight, float charge)
         {
-            target = ClampToMaxLength(origin, target);
-
             _line.enabled = true;
             _line.positionCount = _pointsCount;
+
+            float width = Mathf.Lerp(_minWidth, _maxWidth, Mathf.Clamp01(charge));
+            _line.startWidth = width;
+            _line.endWidth = width;
 
             for (int i = 0; i < _pointsCount; i++)
             {
@@ -41,22 +43,10 @@ namespace ShipLogic
             _line.enabled = false;
         }
 
-        private Vector2 ClampToMaxLength(Vector2 origin, Vector2 target)
-        {
-            Vector2 direction = target - origin;
-
-            if (direction.magnitude > _maxLength)
-                return origin + direction.normalized * _maxLength;
-
-            return target;
-        }
-
         private void SetupLine()
         {
             _line.material = new Material(Shader.Find("Sprites/Default"));
             _line.useWorldSpace = true;
-            _line.startWidth = _width;
-            _line.endWidth = _width;
             _line.numCapVertices = 4;
 
             Gradient gradient = new Gradient();

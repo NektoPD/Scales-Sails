@@ -68,7 +68,8 @@ namespace ShipLogic
                 return;
 
             GetShotData(out Vector2 origin, out Vector2 target, out float arcHeight);
-            _aimTrajectory.Show(origin, target, arcHeight);
+            float charge = Mathf.Clamp01(_chargeTime / _maxChargeTime);
+            _aimTrajectory.Show(origin, target, arcHeight, charge);
         }
 
         private void Fire()
