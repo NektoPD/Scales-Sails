@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 namespace ProjectileLogic
@@ -9,10 +10,11 @@ namespace ProjectileLogic
         [SerializeField] private Transform _visual;
         [SerializeField] private TrailRenderer _trail;
         [SerializeField] private float _heightScaleFactor = 0.4f;
-        [SerializeField] private float _lifeTimeAfterLand = 0.1f;
+        [SerializeField] private float _despawnDuration = 0.25f;
         [SerializeField] private float _damage = 25f;
         [SerializeField] private LayerMask _damageMask = ~0;
 
+        private SpriteRenderer _renderer;
         private Transform _transform;
         private CannonballPool _pool;
         private Vector3 _visualBaseScale;
@@ -22,7 +24,6 @@ namespace ProjectileLogic
         private float _speed;
         private float _distance;
         private float _progress;
-        private float _landTimer;
         private bool _isFlying;
         private bool _isLanding;
 
@@ -30,6 +31,7 @@ namespace ProjectileLogic
 
         private void Awake()
         {
+            _renderer = GetComponent<SpriteRenderer>();
             _transform = transform;
 
             if (_visual != null)
@@ -42,13 +44,14 @@ namespace ProjectileLogic
 
         public void Launch(Vector2 origin, Vector2 target, float arcHeight, float speed)
         {
+            _transform.DOKill();
+
             _origin = origin;
             _target = target;
             _arcHeight = arcHeight;
             _speed = speed;
             _distance = Vector2.Distance(origin, target);
             _progress = 0f;
-            _landTimer = 0f;
             _isFlying = true;
             _isLanding = false;
 
@@ -57,22 +60,14 @@ namespace ProjectileLogic
             if (_visual != null)
                 _visual.localScale = _visualBaseScale;
 
+            SetRendererAlpha(1f);
+
             if (_trail != null)
                 _trail.Clear();
         }
 
         private void Update()
         {
-            if (_isLanding)
-            {
-                _landTimer += Time.deltaTime;
-
-                if (_landTimer >= _lifeTimeAfterLand)
-                    Despawn();
-
-                return;
-            }
-
             if (!_isFlying)
                 return;
 
@@ -95,20 +90,48 @@ namespace ProjectileLogic
 
         private void Land(Vector2 position)
         {
+            if (!_isFlying)
+                return;
+
             _isFlying = false;
             _isLanding = true;
-            _landTimer = 0f;
             Landed?.Invoke(position);
+            PlayDespawnAnimation();
+        }
+
+        private void PlayDespawnAnimation()
+        {
+            _transform.DOKill();
+
+            Sequence sequence = DOTween.Sequence();
+
+            if (_visual != null)
+                sequence.Append(_visual.DOScale(_visualBaseScale * 1.4f, _despawnDuration * 0.4f).SetEase(Ease.OutQuad));
+
+            sequence.Join(_renderer.DOFade(0f, _despawnDuration).SetEase(Ease.InQuad));
+            sequence.OnComplete(Despawn);
         }
 
         private void Despawn()
         {
             _isLanding = false;
+            _transform.DOKill();
+            SetRendererAlpha(1f);
+
+            if (_visual != null)
+                _visual.localScale = _visualBaseScale;
 
             if (_pool != null)
                 _pool.Return(this);
             else
                 gameObject.SetActive(false);
+        }
+
+        private void SetRendererAlpha(float alpha)
+        {
+            Color color = _renderer.color;
+            color.a = alpha;
+            _renderer.color = color;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
