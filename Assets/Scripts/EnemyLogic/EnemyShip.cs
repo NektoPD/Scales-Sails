@@ -35,6 +35,8 @@ namespace EnemyLogic
 
         public bool IsDead => _isDead;
 
+        public virtual void SetAccuracy(float accuracy) { }
+
         protected virtual void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();

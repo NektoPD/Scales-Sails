@@ -13,6 +13,14 @@ namespace EnemyLogic
             _cannon = GetComponent<EnemyCannon>();
         }
 
+        public override void SetAccuracy(float accuracy)
+        {
+            if (_cannon == null)
+                _cannon = GetComponent<EnemyCannon>();
+
+            _cannon.SetAccuracy(accuracy);
+        }
+
         private void Update()
         {
             if (_isDead || _player == null)

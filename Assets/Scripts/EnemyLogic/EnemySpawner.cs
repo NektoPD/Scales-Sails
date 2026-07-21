@@ -38,10 +38,26 @@ namespace EnemyLogic
         [SerializeField] private float _timeBetweenWaves = 6f;
         [SerializeField] private bool _autoGenerateWaves = true;
 
+        [Header("Aggression")]
+        [SerializeField] private float _startAccuracy = 0.15f;
+        [SerializeField] private float _maxAccuracy = 0.85f;
+
         private readonly List<EnemyShip> _alive = new List<EnemyShip>();
         private int _waveIndex;
 
         public event Action AllWavesCleared;
+
+        private float CurrentAccuracy
+        {
+            get
+            {
+                if (_waves == null || _waves.Length <= 1)
+                    return _startAccuracy;
+
+                float t = _waveIndex / (float)(_waves.Length - 1);
+                return Mathf.Lerp(_startAccuracy, _maxAccuracy, t);
+            }
+        }
 
         private void Start()
         {
@@ -132,6 +148,7 @@ namespace EnemyLogic
 
             EnemyShip enemy = Instantiate(prefab, point.position, Quaternion.identity);
             enemy.Initialize(_fort, _player);
+            enemy.SetAccuracy(CurrentAccuracy);
             enemy.Died += OnEnemyDied;
             _alive.Add(enemy);
         }

@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using ProjectileLogic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ShipLogic
 {
@@ -13,6 +14,7 @@ namespace ShipLogic
         [SerializeField] private Sprite _damagedSprite;
         [SerializeField] private float _damagedThreshold = 0.5f;
         [SerializeField] private float _deathDuration = 0.5f;
+        [SerializeField] private Image _healthFill;
 
         private Transform _transform;
         private float _currentHealth;
@@ -38,7 +40,14 @@ namespace ShipLogic
         {
             _currentHealth = MaxHealth;
             UpdateSprite();
+            UpdateFill();
             HealthChanged?.Invoke(_currentHealth, MaxHealth);
+        }
+
+        private void UpdateFill()
+        {
+            if (_healthFill != null)
+                _healthFill.fillAmount = MaxHealth > 0f ? _currentHealth / MaxHealth : 0f;
         }
 
         public void SetMaxHealthMultiplier(float multiplier)
@@ -46,6 +55,7 @@ namespace ShipLogic
             float ratio = MaxHealth > 0f ? _currentHealth / MaxHealth : 1f;
             _healthMultiplier = multiplier;
             _currentHealth = MaxHealth * ratio;
+            UpdateFill();
             HealthChanged?.Invoke(_currentHealth, MaxHealth);
             UpdateSprite();
         }
@@ -56,6 +66,7 @@ namespace ShipLogic
                 return;
 
             _currentHealth = Mathf.Clamp(_currentHealth - damage, 0f, MaxHealth);
+            UpdateFill();
             HealthChanged?.Invoke(_currentHealth, MaxHealth);
             UpdateSprite();
 

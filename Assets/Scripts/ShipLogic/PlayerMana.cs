@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ShipLogic
 {
@@ -8,6 +9,7 @@ namespace ShipLogic
         [SerializeField] private float _maxMana = 100f;
         [SerializeField] private float _manaPerKill = 20f;
         [SerializeField] private float _startMana = 0f;
+        [SerializeField] private Image _manaFill;
 
         private float _currentMana;
 
@@ -17,9 +19,16 @@ namespace ShipLogic
         public float CurrentMana => _currentMana;
         public bool IsEmpty => _currentMana <= 0f;
 
+        private void UpdateFill()
+        {
+            if (_manaFill != null)
+                _manaFill.fillAmount = _maxMana > 0f ? _currentMana / _maxMana : 0f;
+        }
+
         private void Start()
         {
             _currentMana = Mathf.Clamp(_startMana, 0f, _maxMana);
+            UpdateFill();
             ManaChanged?.Invoke(_currentMana, _maxMana);
         }
 
@@ -34,6 +43,7 @@ namespace ShipLogic
                 return;
 
             _currentMana = Mathf.Clamp(_currentMana + amount, 0f, _maxMana);
+            UpdateFill();
             ManaChanged?.Invoke(_currentMana, _maxMana);
         }
 
@@ -45,6 +55,7 @@ namespace ShipLogic
                 return;
 
             _currentMana = Mathf.Clamp(_currentMana - amount, 0f, _maxMana);
+            UpdateFill();
             ManaChanged?.Invoke(_currentMana, _maxMana);
         }
     }
