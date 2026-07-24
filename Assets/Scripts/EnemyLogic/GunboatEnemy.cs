@@ -23,7 +23,7 @@ namespace EnemyLogic
 
         private void Update()
         {
-            if (_isDead || _player == null)
+            if (_isDead || _passive || _player == null)
                 return;
 
             if (_inRange)

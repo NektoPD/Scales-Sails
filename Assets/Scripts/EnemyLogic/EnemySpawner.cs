@@ -37,6 +37,7 @@ namespace EnemyLogic
         [SerializeField] private Wave[] _waves;
         [SerializeField] private float _timeBetweenWaves = 6f;
         [SerializeField] private bool _autoGenerateWaves = true;
+        [SerializeField] private bool _autoStart = true;
 
         [Header("Aggression")]
         [SerializeField] private float _startAccuracy = 0.15f;
@@ -59,12 +60,38 @@ namespace EnemyLogic
             }
         }
 
+        public EnemyShip Sloop => _sloop;
+
         private void Start()
         {
             if (_autoGenerateWaves || _waves == null || _waves.Length == 0)
                 _waves = BuildWaves();
 
+            if (_autoStart)
+                StartWaves();
+        }
+
+        public void StartWaves()
+        {
+            if (_waves == null || _waves.Length == 0)
+                _waves = BuildWaves();
+
             StartCoroutine(RunWaves());
+        }
+
+        public EnemyShip SpawnSingle(EnemyShip prefab, bool passive)
+        {
+            if (prefab == null || _spawnPoints.Length == 0)
+                return null;
+
+            Transform point = _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Length)];
+
+            EnemyShip enemy = Instantiate(prefab, point.position, Quaternion.identity);
+            enemy.Initialize(_fort, _player);
+            enemy.SetPassive(passive);
+            enemy.Died += OnEnemyDied;
+            _alive.Add(enemy);
+            return enemy;
         }
 
         public void StopSpawning()

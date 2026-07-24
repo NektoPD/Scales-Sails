@@ -29,6 +29,7 @@ namespace EnemyLogic
         protected float _currentHealth;
         protected bool _isDead;
         protected bool _inRange;
+        protected bool _passive;
 
         public event Action<EnemyShip> Died;
         public event Action<float, float> HealthChanged;
@@ -36,6 +37,8 @@ namespace EnemyLogic
         public bool IsDead => _isDead;
 
         public virtual void SetAccuracy(float accuracy) { }
+
+        public void SetPassive(bool passive) => _passive = passive;
 
         protected virtual void Awake()
         {
