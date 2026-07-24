@@ -14,7 +14,8 @@ namespace GameLogic
 
         [Header("Hint sprites (player children)")]
         [SerializeField] private SpriteRenderer _wHint;
-        [SerializeField] private SpriteRenderer _adHint;
+        [SerializeField] private SpriteRenderer _aHint;
+        [SerializeField] private SpriteRenderer _dHint;
         [SerializeField] private SpriteRenderer _mouseHint;
         [SerializeField] private float _hintFadeDuration = 0.4f;
 
@@ -34,7 +35,8 @@ namespace GameLogic
         private void Start()
         {
             HideHint(_wHint);
-            HideHint(_adHint);
+            HideHint(_aHint);
+            HideHint(_dHint);
             HideHint(_mouseHint);
             StartCoroutine(RunTutorial());
         }
@@ -53,9 +55,11 @@ namespace GameLogic
             SpawnTutorialEnemy();
 
             yield return new WaitForSeconds(_delayBeforeAdHint);
-            ShowHint(_adHint);
+            ShowHint(_aHint);
+            ShowHint(_dHint);
             yield return WaitForKeys(Key.A, Key.D);
-            HideHint(_adHint);
+            HideHint(_aHint);
+            HideHint(_dHint);
 
             yield return WaitForPlayerNearEnemy();
             ShowHint(_mouseHint);
