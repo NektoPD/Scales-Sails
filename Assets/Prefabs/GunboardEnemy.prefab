@@ -206,7 +206,8 @@ MonoBehaviour:
   _arcHeight: 1.5
   _damageMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 192
+  _damage: 15
 --- !u!114 &8556826600705922148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +230,7 @@ MonoBehaviour:
   _intactSprite: {fileID: -253209141900692233, guid: 16e4c77423c98334fbf3f0ce21fd785b, type: 3}
   _damagedSprite: {fileID: 7116970449920188440, guid: 68aa8f44fdcf34b4eb0a9524cf5fae6c, type: 3}
   _damagedThreshold: 0.5
+  _turretPriorityRadius: 6
 --- !u!114 &1609274055145976275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,6 +253,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8873009026933463113}
     m_Modifications:
+    - target: {fileID: 1121784134817232151, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1121784134817232151, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1121784134817232151, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_FillMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4890185787661188446, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Layer
       value: 8

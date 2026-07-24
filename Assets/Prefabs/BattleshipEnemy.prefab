@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2352a86c94613814c9fe519640147fac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyLogic.EnemyHealthBar
-  _enemy: {fileID: 0}
+  _enemy: {fileID: 4645536944642119791}
   _fillImage: {fileID: 6424525560016743910}
   _root: {fileID: 900542015676212128}
   _hideWhenFull: 1
@@ -204,6 +204,10 @@ MonoBehaviour:
   _fireCooldown: 2
   _projectileSpeed: 8
   _arcHeight: 1.5
+  _damageMask:
+    serializedVersion: 2
+    m_Bits: 192
+  _damage: 15
 --- !u!114 &5644658209745449752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +244,7 @@ MonoBehaviour:
   _intactSprite: {fileID: -253209141900692233, guid: 16e4c77423c98334fbf3f0ce21fd785b, type: 3}
   _damagedSprite: {fileID: -8170054070116237936, guid: 35b9579802403b84abaaf95d74d5dcb3, type: 3}
   _damagedThreshold: 0.5
+  _turretPriorityRadius: 6
 --- !u!1001 &6249060383882221809
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -248,6 +253,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7276857668372673244}
     m_Modifications:
+    - target: {fileID: 1121784134817232151, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1121784134817232151, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1121784134817232151, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_FillMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4890185787661188446, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Layer
       value: 8

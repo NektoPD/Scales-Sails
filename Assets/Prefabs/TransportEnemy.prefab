@@ -207,6 +207,7 @@ MonoBehaviour:
   _intactSprite: {fileID: -5972772318326981822, guid: 547679cde29807a408ee07a5193d362f, type: 3}
   _damagedSprite: {fileID: 4098835183948305094, guid: e8961a45acd9b1546bef2cfbabf88221, type: 3}
   _damagedThreshold: 0.5
+  _turretPriorityRadius: 6
   _reinforcementPrefab: {fileID: 2062382484316555689, guid: 5f4f5f798942c93418b9b362e91bcded, type: 3}
   _reinforcementCount: 3
   _spawnRadius: 1.5
@@ -218,6 +219,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5805047281024521337}
     m_Modifications:
+    - target: {fileID: 1121784134817232151, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_Type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1121784134817232151, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1121784134817232151, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
+      propertyPath: m_FillMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4890185787661188446, guid: 95a9e5b893e03cd4ebeb6f21ec127d3e, type: 3}
       propertyPath: m_Layer
       value: 8
