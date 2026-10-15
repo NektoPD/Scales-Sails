@@ -136,6 +136,18 @@ namespace GameLogic
             hint.DOKill();
             SetAlpha(hint, 0f);
             hint.DOFade(1f, _hintFadeDuration);
+
+            if (hint == _mouseHint)
+                PulseHold(hint);
+        }
+
+        private void PulseHold(SpriteRenderer hint)
+        {
+            Vector3 baseScale = hint.transform.localScale;
+            hint.transform.DOScale(baseScale * 0.85f, 0.5f)
+                .SetEase(Ease.InOutSine)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetId(hint);
         }
 
         private void HideHint(SpriteRenderer hint)
@@ -144,6 +156,8 @@ namespace GameLogic
                 return;
 
             hint.DOKill();
+            DOTween.Kill(hint);
+            hint.transform.DOKill();
             hint.DOFade(0f, _hintFadeDuration).OnComplete(() => hint.gameObject.SetActive(false));
         }
 
