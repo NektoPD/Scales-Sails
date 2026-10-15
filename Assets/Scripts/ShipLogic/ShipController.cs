@@ -6,7 +6,7 @@ namespace ShipLogic
     [RequireComponent(typeof(Rigidbody2D))]
     public class ShipController : MonoBehaviour
     {
-        [SerializeField] private float _moveSpeed = 4f;
+        [SerializeField] private float _moveSpeed = 6f;
         [SerializeField] private float _rotationSpeed = 120f;
         [SerializeField] private float _spriteForwardOffset = -90f;
 

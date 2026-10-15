@@ -12,7 +12,7 @@ namespace ShipLogic
         [SerializeField] private float _minDistance = 2f;
         [SerializeField] private float _maxDistance = 9f;
         [SerializeField] private float _maxChargeTime = 1.2f;
-        [SerializeField] private float _projectileSpeed = 10f;
+        [SerializeField] private float _projectileSpeed = 12f;
         [SerializeField] private float _minArcHeight = 0.6f;
         [SerializeField] private float _maxArcHeight = 2f;
         [SerializeField] private LayerMask _damageMask = ~0;

@@ -31,6 +31,18 @@ namespace GameLogic
         [SerializeField] private float _mouseHintRange = 6f;
 
         private EnemyShip _tutorialEnemy;
+        private Quaternion _wHintRotation;
+        private Quaternion _aHintRotation;
+        private Quaternion _dHintRotation;
+        private Quaternion _mouseHintRotation;
+
+        private void Awake()
+        {
+            _wHintRotation = GetHintRotation(_wHint);
+            _aHintRotation = GetHintRotation(_aHint);
+            _dHintRotation = GetHintRotation(_dHint);
+            _mouseHintRotation = GetHintRotation(_mouseHint);
+        }
 
         private void Start()
         {
@@ -39,6 +51,14 @@ namespace GameLogic
             HideHint(_dHint);
             HideHint(_mouseHint);
             StartCoroutine(RunTutorial());
+        }
+
+        private void LateUpdate()
+        {
+            KeepHintRotation(_wHint, _wHintRotation);
+            KeepHintRotation(_aHint, _aHintRotation);
+            KeepHintRotation(_dHint, _dHintRotation);
+            KeepHintRotation(_mouseHint, _mouseHintRotation);
         }
 
         private IEnumerator RunTutorial()
@@ -166,6 +186,17 @@ namespace GameLogic
             Color color = hint.color;
             color.a = alpha;
             hint.color = color;
+        }
+
+        private static Quaternion GetHintRotation(SpriteRenderer hint)
+        {
+            return hint != null ? hint.transform.rotation : Quaternion.identity;
+        }
+
+        private static void KeepHintRotation(SpriteRenderer hint, Quaternion rotation)
+        {
+            if (hint != null)
+                hint.transform.rotation = rotation;
         }
     }
 }

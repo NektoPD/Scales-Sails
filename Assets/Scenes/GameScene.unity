@@ -47139,7 +47139,7 @@ MonoBehaviour:
   _minDistance: 2
   _maxDistance: 9
   _maxChargeTime: 1.2
-  _projectileSpeed: 8
+  _projectileSpeed: 12
   _minArcHeight: 0.6
   _maxArcHeight: 2
   _damageMask:
@@ -51574,7 +51574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b46ed0bcdc82164d9c0a5a417965fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipLogic.ShipController
-  _moveSpeed: 4
+  _moveSpeed: 6
   _rotationSpeed: 180
   _spriteForwardOffset: 90
 --- !u!50 &1548159214
